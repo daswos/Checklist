@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Study Tracker - Track Your Academic Progress</title>
+    <meta name="description" content="A beautiful, interactive study tracker to monitor your university course progress. Features persistent storage, progress statistics, and export/import functionality.">
+    <meta name="keywords" content="study tracker, academic progress, university, checklist, student planner">
+    <meta name="author" content="Study Tracker">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Interactive Study Tracker">
+    <meta property="og:description" content="Track your academic progress with this beautiful, interactive study tracker.">
+    <meta property="og:url" content="https://yourusername.github.io/checklist">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Interactive Study Tracker">
+    <meta property="twitter:description" content="Track your academic progress with this beautiful, interactive study tracker.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Custom checkbox animations */
+        input[type="checkbox"] {
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="checkbox"]:checked {
+            transform: scale(1.1);
+        }
+
+        /* Smooth transitions for task completion */
+        .task-completed {
+            opacity: 0.7;
+            transform: scale(0.98);
+            transition: all 0.3s ease;
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            background: linear-gradient(90deg, #e5e7eb, #f3f4f6);
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        /* Celebration animation */
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.6s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8 flex items-center justify-center">
+
+    <div class="container mx-auto p-6 bg-white shadow-xl rounded-2xl max-w-4xl w-full">
+        <h1 class="text-4xl font-extrabold text-center text-indigo-700 mb-2">My Study & Project Checklist</h1>
+        <p class="text-center text-gray-500 mb-8">Click the checkboxes to track your progress. Your list is saved automatically!</p>
+
+        <!-- Status message area -->
+        <div id="status-message" class="hidden text-center p-4 bg-green-100 text-green-700 rounded-lg mb-6 text-lg font-semibold">
+            All tasks for this section completed! Great work!
+        </div>
+
+        <div id="all-tasks-completed" class="hidden text-center p-6 bg-green-500 text-white rounded-lg mb-6 text-2xl font-bold animate-pulse">
+            All tasks are completed! You're ready for your assignments.
+        </div>
+
+        <!-- August 2025 -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-indigo-200">August 2025</h2>
+
+            <!-- Week 1: Introduction to Programming -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 1: August 11 - August 15 (Introduction to Programming)</h3>
+                <div class="space-y-3">
+                    <label for="task1" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task1" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Mon, Aug 11: Programming Lessons 1 & 2</span>
+                    </label>
+                    <label for="task2" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task2" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Tue, Aug 12: Programming Lessons 3 & 4</span>
+                    </label>
+                    <label for="task3" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task3" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Wed, Aug 13: Programming Lessons 5 & 6</span>
+                    </label>
+                    <label for="task4" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task4" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Thu, Aug 14: Programming Lessons 7 & 8</span>
+                    </label>
+                    <label for="task5" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task5" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Fri, Aug 15: Programming Lessons 9 & 10</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Week 2: Programming Assignment -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 2: August 18 - August 22 (Programming Assignment)</h3>
+                <label for="task6" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                    <input type="checkbox" id="task6" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <span class="text-gray-700 font-medium flex-1">Mon-Fri: Work on the Introduction to Programming assignment</span>
+                </label>
+            </div>
+
+            <!-- Week 3: Data Analysis -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 3: August 25 - August 29 (Data Analysis)</h3>
+                <div class="space-y-3">
+                    <label for="task7" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task7" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Mon, Aug 25: Data Analysis Lessons 1 & 2</span>
+                    </label>
+                    <label for="task8" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task8" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Tue, Aug 26: Data Analysis Lessons 3 & 4</span>
+                    </label>
+                    <label for="task9" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task9" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Wed, Aug 27: Data Analysis Lessons 5 & 6</span>
+                    </label>
+                    <label for="task10" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task10" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Thu, Aug 28: Data Analysis Lessons 7 & 8</span>
+                    </label>
+                    <label for="task11" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task11" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Fri, Aug 29: Data Analysis Lesson 9 & Review</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- September 2025 -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-indigo-200">September 2025</h2>
+
+            <!-- Week 4: Data Analysis Assignment -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 4: Sep 1 - Sep 5 (Data Analysis Assignment)</h3>
+                <label for="task12" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                    <input type="checkbox" id="task12" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <span class="text-gray-700 font-medium flex-1">Mon-Fri: Work on the Data Analysis and Visualisation assignment</span>
+                </label>
+            </div>
+
+            <!-- Week 5: Human Computer Interaction -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 5: Sep 8 - Sep 12 (Human Computer Interaction)</h3>
+                <div class="space-y-3">
+                    <label for="task13" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task13" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Mon, Sep 8: HCI Lessons 1-4</span>
+                    </label>
+                    <label for="task14" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task14" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Tue, Sep 9: HCI Lessons 5-8</span>
+                    </label>
+                    <label for="task15" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task15" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Wed, Sep 10: HCI Lessons 9 & 10 & Review</span>
+                    </label>
+                    <label for="task16" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task16" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Thu-Fri, Sep 11-12: Begin HCI assignment</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Week 6: HCI Assignment -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 6: Sep 15 - Sep 19 (HCI Assignment)</h3>
+                <label for="task17" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                    <input type="checkbox" id="task17" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <span class="text-gray-700 font-medium flex-1">Mon-Fri: Complete the Human Computer Interaction assignment</span>
+                </label>
+            </div>
+
+            <!-- Week 7: Intro to Computer Systems -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 7: Sep 22 - Sep 26 (Intro to Computer Systems)</h3>
+                <div class="space-y-3">
+                    <label for="task18" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task18" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Mon, Sep 22: Computer Systems Lessons 1-4</span>
+                    </label>
+                    <label for="task19" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task19" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Tue, Sep 23: Computer Systems Lessons 5-8</span>
+                    </label>
+                    <label for="task20" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task20" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Wed, Sep 24: Computer Systems Lesson 9 & Review</span>
+                    </label>
+                    <label for="task21" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task21" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Thu-Fri, Sep 25-26: Review all completed lessons and assignments</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- October 2025 -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-indigo-200">October 2025</h2>
+
+            <!-- Week 8: Review & Buffer -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 8: Sep 29 - Oct 3 (Review & Buffer)</h3>
+                <label for="task22" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                    <input type="checkbox" id="task22" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <span class="text-gray-700 font-medium flex-1">Mon-Fri: Comprehensive review of all three assignments and lessons</span>
+                </label>
+            </div>
+
+            <!-- Week 9: Final Polish -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 9: Oct 6 - Oct 10 (Final Polish)</h3>
+                <label for="task23" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                    <input type="checkbox" id="task23" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    <span class="text-gray-700 font-medium flex-1">Mon-Fri: Final checks and polishing for all three assignments</span>
+                </label>
+            </div>
+            
+            <!-- Week 10: Submission -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">Week 10: Oct 13 - Oct 22 (Submission)</h3>
+                <div class="space-y-3">
+                    <label for="task24" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task24" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Mon, Oct 13: Submit Introduction to Programming assignment (by 2:00 PM)</span>
+                    </label>
+                    <label for="task25" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task25" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Tue, Oct 14 - Tue, Oct 21: Final review for remaining assignments</span>
+                    </label>
+                    <label for="task26" class="flex items-center space-x-3 bg-indigo-50 p-4 rounded-lg cursor-pointer hover:bg-indigo-100 transition-colors duration-200">
+                        <input type="checkbox" id="task26" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        <span class="text-gray-700 font-medium flex-1">Wed, Oct 22: Submit Data Analysis & HCI assignments (by 2:00 PM)</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Statistics -->
+        <div class="bg-gray-50 p-6 rounded-lg mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Progress Overview</h3>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Overall Progress</span>
+                    <span id="progress-text">0% Complete</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-2xl font-bold text-indigo-600" id="completed-count">0</div>
+                    <div class="text-sm text-gray-600">Tasks Completed</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-2xl font-bold text-gray-600" id="remaining-count">0</div>
+                    <div class="text-sm text-gray-600">Tasks Remaining</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-2xl font-bold text-green-600" id="progress-percentage">0%</div>
+                    <div class="text-sm text-gray-600">Progress</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 mt-8">
+            <button id="export-button" class="px-6 py-3 text-indigo-600 font-semibold bg-white border border-indigo-300 rounded-lg shadow hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200">
+                📊 Export Progress
+            </button>
+            <button id="import-button" class="px-6 py-3 text-green-600 font-semibold bg-white border border-green-300 rounded-lg shadow hover:bg-green-50 hover:text-green-700 transition-colors duration-200">
+                📥 Import Progress
+            </button>
+            <button id="reset-button" class="px-6 py-3 text-red-600 font-semibold bg-white border border-red-300 rounded-lg shadow hover:bg-red-50 hover:text-red-700 transition-colors duration-200">
+                🔄 Reset All Tasks
+            </button>
+        </div>
+
+        <!-- Hidden file input for import -->
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const allTasksCompletedMessage = document.getElementById('all-tasks-completed');
+            const resetButton = document.getElementById('reset-button');
+            const exportButton = document.getElementById('export-button');
+            const importButton = document.getElementById('import-button');
+            const importFile = document.getElementById('import-file');
+            const statusMessage = document.getElementById('status-message');
+
+            // Progress elements
+            const completedCount = document.getElementById('completed-count');
+            const remainingCount = document.getElementById('remaining-count');
+            const progressPercentage = document.getElementById('progress-percentage');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+
+            const saveProgress = () => {
+                const progress = {};
+                allCheckboxes.forEach(checkbox => {
+                    progress[checkbox.id] = checkbox.checked;
+                });
+                localStorage.setItem('studyProgress', JSON.stringify(progress));
+                updateProgressStats();
+            };
+
+            const loadProgress = () => {
+                const savedProgress = localStorage.getItem('studyProgress');
+                if (savedProgress) {
+                    const progress = JSON.parse(savedProgress);
+                    allCheckboxes.forEach(checkbox => {
+                        if (progress[checkbox.id]) {
+                            checkbox.checked = progress[checkbox.id];
+                        }
+                    });
+                }
+                updateProgressStats();
+            };
+
+            const updateProgressStats = () => {
+                const totalTasks = allCheckboxes.length;
+                const completedTasks = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const remaining = totalTasks - completedTasks;
+                const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+                // Update text elements
+                completedCount.textContent = completedTasks;
+                remainingCount.textContent = remaining;
+                progressPercentage.textContent = percentage + '%';
+                progressText.textContent = `${percentage}% Complete (${completedTasks} of ${totalTasks} tasks)`;
+
+                // Update progress bar
+                progressFill.style.width = percentage + '%';
+
+                // Add celebration animation when reaching 100%
+                if (percentage === 100 && totalTasks > 0) {
+                    allTasksCompletedMessage.classList.remove('hidden');
+                    document.querySelector('.container').classList.add('celebrate');
+                    setTimeout(() => {
+                        document.querySelector('.container').classList.remove('celebrate');
+                    }, 600);
+                } else {
+                    allTasksCompletedMessage.classList.add('hidden');
+                }
+            };
+            
+            // Export functionality
+            const exportProgress = () => {
+                const progress = {};
+                allCheckboxes.forEach(checkbox => {
+                    progress[checkbox.id] = checkbox.checked;
+                });
+
+                const exportData = {
+                    version: "1.0",
+                    exportDate: new Date().toISOString(),
+                    progress: progress,
+                    totalTasks: allCheckboxes.length,
+                    completedTasks: document.querySelectorAll('input[type="checkbox"]:checked').length
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `study-progress-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alert('Progress exported successfully!');
+            };
+
+            // Import functionality
+            const importProgress = (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importData = JSON.parse(e.target.result);
+
+                        if (importData.progress) {
+                            allCheckboxes.forEach(checkbox => {
+                                if (importData.progress.hasOwnProperty(checkbox.id)) {
+                                    checkbox.checked = importData.progress[checkbox.id];
+                                }
+                            });
+                            saveProgress();
+                            alert('Progress imported successfully!');
+                        } else {
+                            alert('Invalid file format. Please select a valid progress export file.');
+                        }
+                    } catch (error) {
+                        alert('Error reading file. Please make sure it\'s a valid JSON file.');
+                    }
+                };
+                reader.readAsText(file);
+
+                // Reset file input
+                event.target.value = '';
+            };
+
+            // Event listeners
+            allCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', saveProgress);
+            });
+
+            exportButton.addEventListener('click', exportProgress);
+            importButton.addEventListener('click', () => importFile.click());
+            importFile.addEventListener('change', importProgress);
+
+            resetButton.addEventListener('click', () => {
+                const confirmed = window.confirm('Are you sure you want to reset all tasks? This cannot be undone.');
+                if (confirmed) {
+                    localStorage.removeItem('studyProgress');
+                    allCheckboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                    updateProgressStats();
+                }
+            });
+
+            // Load progress on page load
+            loadProgress();
+        });
+    </script>
+</body>
+</html>
